@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rundown_flutter/pages/home_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -10,14 +11,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: HomePage(),
     );
-  }
-}
-
-class MyHomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container();
   }
 }
