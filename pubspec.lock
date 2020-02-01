@@ -120,6 +120,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  clay_containers:
+    dependency: "direct main"
+    description:
+      name: clay_containers
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.2"
   code_builder:
     dependency: transitive
     description:
@@ -190,6 +197,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.10.11"
+  flare_dart:
+    dependency: transitive
+    description:
+      name: flare_dart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.3.3"
+  flare_flutter:
+    dependency: transitive
+    description:
+      name: flare_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.3"
   floating_search_bar:
     dependency: "direct main"
     description:
@@ -338,13 +359,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.4"
-  neumorphic:
-    dependency: "direct main"
-    description:
-      name: neumorphic
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.2"
   node_interop:
     dependency: transitive
     description:
@@ -429,6 +443,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  rive:
+    dependency: "direct main"
+    description:
+      name: rive
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.1"
   rxdart:
     dependency: transitive
     description:
@@ -539,6 +560,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.11"
+  timeline_list:
+    dependency: "direct main"
+    description:
+      name: timeline_list
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.5"
   timing:
     dependency: transitive
     description:

@@ -9,8 +9,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Rundown',
       theme: ThemeData(
-        primarySwatch: Colors.blueGrey,
-        accentColor: Colors.blueGrey,
+        primarySwatch: Colors.blue,
+        accentColor: Colors.blue[300],
       ),
       home: HomePage(),
     );
