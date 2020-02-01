@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 
 class RestClient {
-  static const ENDPOINT = "localhots:8000/api/";
+  static const ENDPOINT = "http://192.168.1.4:8000/api/";
   static Dio _dio;
 
   static Dio instance(){
@@ -23,4 +23,5 @@ class RestClient {
   static const USER_URL = ENDPOINT+"user/";
   static const FRIEND_URL = ENDPOINT+"friend/";
   static const RUNDOWN_DETAIL_URL = ENDPOINT+"rundown_detail/";
+  static const RUNDOWN_URL = ENDPOINT+"rundown/";
 }
