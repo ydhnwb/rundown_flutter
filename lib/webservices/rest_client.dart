@@ -1,16 +1,16 @@
 import 'package:dio/dio.dart';
 
 class RestClient {
-  static const ENDPOINT = "http://192.168.1.4:8000/api/";
+  static const ENDPOINT = "http://192.168.1.7:8000/api/";
   static Dio _dio;
 
   static Dio instance(){
     if(_dio == null){
       BaseOptions options = BaseOptions(
         baseUrl: ENDPOINT,
-        connectTimeout: 30000,
-        receiveTimeout: 30000,
-        sendTimeout: 30000
+        connectTimeout: 3000,
+        receiveTimeout: 3000,
+        sendTimeout: 3000
       );
       _dio = Dio(options);
       return _dio;

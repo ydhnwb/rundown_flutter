@@ -40,3 +40,8 @@ class RundownErrorState implements RundownState {
   @override
   List<Object> get props => [message];
 }
+
+class RundownSuccessState implements RundownState {
+  @override
+  List<Object> get props => [];
+}

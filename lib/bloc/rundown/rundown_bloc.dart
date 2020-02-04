@@ -21,6 +21,12 @@ class RundownBloc extends Bloc<RundownEvent, RundownState>{
       yield* _getAllRundown();
     }else if(event is FetchSingleRundown){
       yield* _getSingleRundown(event.id);
+    }else if (event is FetchCreateRundown){
+      yield* _createRundown(event.rundown);
+    }else if(event is FetchDeleteRundown){
+      yield* _deleteRundown(event.id);
+    }else if(event is FetchUpdateRundown){
+      yield* _updateRundown(event.rundown);
     }
   }
 
@@ -28,6 +34,90 @@ class RundownBloc extends Bloc<RundownEvent, RundownState>{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String token = (prefs.getString('api_token') ?? null);
     return token;
+  }
+
+  Stream<RundownState> _deleteRundown(String id) async*{
+    try{
+      yield RundownLoadingState();
+      _dio.options.headers["Authorization"] = "Token d3b61525fb85366e5f3780266494f4bb92cb4f57";
+      Response res = await _dio.delete(RestClient.RUNDOWN_URL+id+"/");
+      BaseResponse baseResponse = BaseResponse.fromJson(res.data);
+      if(baseResponse.status){
+        yield RundownSuccessState();
+      }else{
+        yield RundownErrorState(message: "Cannot delete a new rundown");
+      }
+    }catch(e){
+      switch(e.runtimeType){
+        case DioError:
+          final err = (e as DioError).response;
+          print("An error occured with status code "+err.statusCode.toString());
+          yield RundownErrorState(message: "Error with code:"+err.statusCode.toString());
+          break;
+        default:
+          print("Error inside default switch case");
+          yield RundownErrorState(message: "Error when requesting to server.");
+      }      
+    }
+  }
+
+
+Stream<RundownState> _updateRundown(Rundown rundown) async* {
+    try{
+      yield RundownLoadingState();
+      _dio.options.headers["Authorization"] = "Token d3b61525fb85366e5f3780266494f4bb92cb4f57";
+      Response res = await _dio.put(RestClient.RUNDOWN_URL+rundown.id.toString()+"/", data: {
+        "title": rundown.title, "description": rundown.description
+      });
+
+      BaseResponse baseResponse = BaseResponse.fromJson(res.data);
+      if(baseResponse.status){
+        yield RundownSuccessState();
+      }else{
+        yield RundownErrorState(message: "Cannot update a new rundown");
+      }
+    }catch(e){
+      switch(e.runtimeType){
+        case DioError:
+          final err = (e as DioError).response;
+          print("An error occured with status code "+err.statusCode.toString());
+          yield RundownErrorState(message: "Error with code:"+err.statusCode.toString());
+          break;
+        default:
+          print("Error inside default switch case");
+          yield RundownErrorState(message: "Error when requesting to server.");
+      }
+    }
+  }
+
+
+
+  Stream<RundownState> _createRundown(Rundown rundown) async* {
+    try{
+      yield RundownLoadingState();
+      _dio.options.headers["Authorization"] = "Token d3b61525fb85366e5f3780266494f4bb92cb4f57";
+      Response res = await _dio.post(RestClient.RUNDOWN_URL, data: {
+        "title": rundown.title, "description": rundown.description
+      });
+
+      BaseResponse baseResponse = BaseResponse.fromJson(res.data);
+      if(baseResponse.status){
+        yield RundownSuccessState();
+      }else{
+        yield RundownErrorState(message: "Cannot create a new rundown");
+      }
+    }catch(e){
+      switch(e.runtimeType){
+        case DioError:
+          final err = (e as DioError).response;
+          print("An error occured with status code "+err.statusCode.toString());
+          yield RundownErrorState(message: "Error with code:"+err.statusCode.toString());
+          break;
+        default:
+          print("Error inside default switch case");
+          yield RundownErrorState(message: "Error when requesting to server.");
+      }
+    }
   }
 
   Stream<RundownState> _getSingleRundown(String id) async* {

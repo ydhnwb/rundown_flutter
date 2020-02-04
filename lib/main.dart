@@ -10,7 +10,7 @@ class MyApp extends StatelessWidget {
       title: 'Rundown',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-        accentColor: Colors.blue[300],
+        accentColor: Colors.indigoAccent,
       ),
       home: HomePage(),
     );

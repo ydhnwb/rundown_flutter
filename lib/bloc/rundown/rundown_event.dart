@@ -11,18 +11,28 @@ class FetchRundown implements RundownEvent{
 
 class FetchSingleRundown implements RundownEvent{
   final String id;
-
   FetchSingleRundown({@required this.id});
-
   @override
   List<Object> get props => [id];
 }
 
 class FetchCreateRundown implements RundownEvent{
   final Rundown rundown;
-
   FetchCreateRundown({@required this.rundown});
+  @override
+  List<Object> get props => [rundown];
+}
 
+class FetchDeleteRundown implements RundownEvent {
+  final String id;
+  FetchDeleteRundown({@required this.id});
+  @override
+  List<Object> get props => [id];
+}
+
+class FetchUpdateRundown implements RundownEvent {
+  final Rundown rundown;
+  FetchUpdateRundown({@required this.rundown});
   @override
   List<Object> get props => [rundown];
 }

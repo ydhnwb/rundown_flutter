@@ -1,10 +1,9 @@
 import 'package:clay_containers/clay_containers.dart';
 import 'package:flutter/material.dart';
 import 'package:rundown_flutter/models/rundown_detail.dart';
-import 'package:rundown_flutter/utils/utils.dart';
 
 class RundownDetailComponent extends StatelessWidget {
-  RundownDetail rundownDetail;
+  final RundownDetail rundownDetail;
 
   RundownDetailComponent({Key key, @required this.rundownDetail})
       : super(key: key);
@@ -15,7 +14,6 @@ class RundownDetailComponent extends StatelessWidget {
       margin: EdgeInsets.all(6),
       child: ClayContainer(
           borderRadius: 10,
-          color: Utils.backgroundColor,
           child: InkWell(
             onTap: () {
               print(rundownDetail.title);
