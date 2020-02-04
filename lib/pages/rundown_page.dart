@@ -91,7 +91,7 @@ class _CreateRundownPageState extends State<CreateRundownPage> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: Colors.white,
-        title: Text( _tempRundown.id != null ? "update" : "Create new",
+        title: Text( _tempRundown != null ? "Edit" : "Create new",
           style: TextStyle(color: Theme.of(context).accentColor),
         ),
         leading: IconButton(
@@ -107,14 +107,17 @@ class _CreateRundownPageState extends State<CreateRundownPage> {
                 if(_textEditingController.text.toString().trim().isEmpty || _notusDocument.toPlainText().trim().isEmpty){
                   _showToast("Please fill with title and description");
                 }else{
-                  if(_textEditingController.text.toString().trim().length < 250){
+                  if(_textEditingController.text.toString().trim().length > 250){
                     _showToast("The title is too long");
                   }else{
                     print(json.encode(_notusDocument.toDelta()));
                     var x = json.encode(_notusDocument.toDelta());
+
+
                     Rundown r = Rundown()
                     ..title = _textEditingController.text.toString().trim()
                     ..description = x;
+                    if(this.widget.rundown != null){ r.id = this.widget.rundown.id; }
                   _rundownBloc.add(widget.rundown != null ? FetchUpdateRundown(rundown: r) : FetchCreateRundown(rundown: r));
                   }
                 }

@@ -8,7 +8,7 @@ import 'package:rundown_flutter/bloc/rundown/rundown_event.dart';
 import 'package:rundown_flutter/bloc/rundown/rundown_state.dart';
 import 'package:rundown_flutter/components/rundown_detail_component.dart';
 import 'package:rundown_flutter/models/rundown_detail.dart';
-import 'package:rundown_flutter/pages/create_rundown_page.dart';
+import 'package:rundown_flutter/pages/rundown_page.dart';
 import 'package:rundown_flutter/utils/utils.dart';
 import 'package:timeline_list/timeline.dart';
 import 'package:timeline_list/timeline_model.dart';
@@ -28,13 +28,10 @@ class _DetailPageState extends State<DetailPage> {
   bool _isPressed = false;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _rundownBloc.add(FetchSingleRundown(id: this.widget.rundownId));
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +43,8 @@ class _DetailPageState extends State<DetailPage> {
         ),
         body: BlocListener<RundownBloc, RundownState>(
           bloc: _rundownBloc,
-          listener: (context, state){
-            if(state is RundownSuccessState){
+          listener: (context, state) {
+            if (state is RundownSuccessState) {
               Navigator.pop(context);
             }
           },
@@ -78,7 +75,8 @@ class _DetailPageState extends State<DetailPage> {
                                 padding: EdgeInsets.only(
                                     top: 116, left: 26, right: 26, bottom: 26),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
@@ -91,7 +89,8 @@ class _DetailPageState extends State<DetailPage> {
                                     Container(
                                       margin:
                                           EdgeInsets.only(top: 16, bottom: 16),
-                                      child: _renderNotus(state.rundown.description),
+                                      child: _renderNotus(
+                                          state.rundown.description),
                                     ),
                                     Text(state.rundown.rundownDetails.length
                                             .toString() +
@@ -113,8 +112,36 @@ class _DetailPageState extends State<DetailPage> {
                                                       Icons.delete,
                                                       color: Colors.white,
                                                     ),
-                                                    onPressed: () {
-                                                      _rundownBloc.add(FetchDeleteRundown(id:state.rundown.id.toString()));
+                                                    onPressed: () async {
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (context) {
+                                                            return AlertDialog(
+                                                              title: Text(
+                                                                  "Delete this?"),
+                                                              content: Text(
+                                                                  "All the child items will be deleted too and your friends who have this copy still have it"),
+                                                              actions: <Widget>[
+                                                                FlatButton(
+                                                                    onPressed: () =>
+                                                                        Navigator.pop(
+                                                                            context),
+                                                                    child: Text(
+                                                                        "CANCEL")),
+                                                                FlatButton(
+                                                                    onPressed: () {
+                                                                      Navigator.pop(context);
+                                                                      _rundownBloc.add(FetchDeleteRundown(
+                                                                        id: state
+                                                                            .rundown
+                                                                            .id
+                                                                            .toString())); 
+                                                                    },
+                                                                    child: Text(
+                                                                        "DELETE"))
+                                                              ],
+                                                            );
+                                                          });
                                                     }),
                                               ),
                                             ),
@@ -127,13 +154,34 @@ class _DetailPageState extends State<DetailPage> {
                                                       Icons.edit,
                                                       color: Colors.grey[600],
                                                     ),
-                                                    onPressed: () =>
-                                                      Navigator.push(context, MaterialPageRoute(
-                                                        builder: (context) => CreateRundownPage(
-                                                          rundown: state.rundown)))
-                                                    
-                                                    ),
+                                                    onPressed: () {
+                                                      print("idnyaaa "+state.rundown.id.toString());
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                CreateRundownPage(
+                                                                    rundown: state
+                                                                        .rundown))
+                                                                        );
+                                                    }
+                                                                        ),
                                               ),
+                                            ),
+                                            Padding(
+                                              padding: EdgeInsets.all(8),
+                                              child: ClayContainer(
+                                                borderRadius: 75,
+                                                child: IconButton(
+                                                    icon: Icon(
+                                                      Icons.sort,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                    onPressed: () {
+                                                      print("reorder");
+                                                    },
+                                              ),
+                                            ),
                                             ),
                                           ],
                                         ))
@@ -156,8 +204,9 @@ class _DetailPageState extends State<DetailPage> {
                               top: 46, left: 16, right: 16, bottom: 16),
                           child: ClayContainer(
                             borderRadius: 75,
-                            curveType:
-                                _isPressed ? CurveType.concave : CurveType.convex,
+                            curveType: _isPressed
+                                ? CurveType.concave
+                                : CurveType.convex,
                             child: IconButton(
                               icon: Icon(
                                 Icons.arrow_back,
@@ -180,7 +229,7 @@ class _DetailPageState extends State<DetailPage> {
                           )),
                     ],
                   );
-                }else{
+                } else {
                   return Container();
                 }
               }),
@@ -202,7 +251,7 @@ class _DetailPageState extends State<DetailPage> {
         position: TimelinePosition.Left);
   }
 
-  Widget _renderNotus(String desc){
+  Widget _renderNotus(String desc) {
     var j = json.decode(desc);
     NotusDocument notusDocument = NotusDocument.fromJson(j);
     return ZefyrView(

@@ -67,7 +67,7 @@ Stream<RundownState> _updateRundown(Rundown rundown) async* {
       yield RundownLoadingState();
       _dio.options.headers["Authorization"] = "Token d3b61525fb85366e5f3780266494f4bb92cb4f57";
       Response res = await _dio.put(RestClient.RUNDOWN_URL+rundown.id.toString()+"/", data: {
-        "title": rundown.title, "description": rundown.description
+        "id":rundown.id,"title": rundown.title, "description": rundown.description
       });
 
       BaseResponse baseResponse = BaseResponse.fromJson(res.data);
