@@ -8,6 +8,7 @@ import 'package:rundown_flutter/bloc/rundown/rundown_event.dart';
 import 'package:rundown_flutter/bloc/rundown/rundown_state.dart';
 import 'package:rundown_flutter/components/rundown_detail_component.dart';
 import 'package:rundown_flutter/models/rundown_detail.dart';
+import 'package:rundown_flutter/pages/rundown_detail_page.dart';
 import 'package:rundown_flutter/pages/rundown_page.dart';
 import 'package:rundown_flutter/utils/utils.dart';
 import 'package:timeline_list/timeline.dart';
@@ -37,7 +38,9 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () => print("press"),
+          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => RundownDetailPage(
+            rundownId: this.widget.rundownId,
+          ))),
           backgroundColor: Theme.of(context).accentColor,
           child: Icon(Icons.add, color: Colors.white),
         ),
@@ -239,7 +242,7 @@ class _DetailPageState extends State<DetailPage> {
   Widget _generateRundownDetail(List<RundownDetail> rundownDetails) {
     List<TimelineModel> items = List();
     for (var rd in rundownDetails) {
-      items.add(TimelineModel(RundownDetailComponent(rundownDetail: rd),
+      items.add(TimelineModel(RundownDetailComponent(rundownDetail: rd, rundownId: this.widget.rundownId,),
           position: TimelineItemPosition.right,
           icon: Icon(Icons.info, color: Utils.textColor)));
     }

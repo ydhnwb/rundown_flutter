@@ -1,11 +1,13 @@
 import 'package:clay_containers/clay_containers.dart';
 import 'package:flutter/material.dart';
 import 'package:rundown_flutter/models/rundown_detail.dart';
+import 'package:rundown_flutter/pages/rundown_detail_page.dart';
 
 class RundownDetailComponent extends StatelessWidget {
+  final String rundownId;
   final RundownDetail rundownDetail;
 
-  RundownDetailComponent({Key key, @required this.rundownDetail})
+  RundownDetailComponent({Key key, @required this.rundownDetail, @required this.rundownId})
       : super(key: key);
 
   @override
@@ -16,7 +18,7 @@ class RundownDetailComponent extends StatelessWidget {
           borderRadius: 10,
           child: InkWell(
             onTap: () {
-              print(rundownDetail.title);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => RundownDetailPage(rundownId: this.rundownId, rundownDetail: this.rundownDetail,)));
             },
             child: Padding(
               padding: EdgeInsets.only(top: 16, left: 16, right: 16, bottom: 16),

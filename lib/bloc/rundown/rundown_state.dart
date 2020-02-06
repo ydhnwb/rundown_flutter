@@ -16,9 +16,7 @@ class RundownLoadingState implements RundownState {
 
 class RundownLoadedState implements RundownState {
   final List<Rundown> rundowns;
-  
   RundownLoadedState({@required this.rundowns});
-
   @override
   List<Object> get props => [rundowns];
 }
