@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:rundown_flutter/models/user.dart';
 
 part 'friend.g.dart';
 
@@ -10,7 +9,7 @@ class Friend {
   @JsonKey(name: "user")
   int userId;
   @JsonKey(name: "friend")
-  User friend;
+  Map<String, dynamic> friend;
   @JsonKey(name: "is_blocked")
   bool isBlocked;
   @JsonKey(name: "is_accepted")

@@ -11,6 +11,7 @@ import 'package:rundown_flutter/models/rundown.dart';
 import 'package:rundown_flutter/pages/rundown_page.dart';
 import 'package:rundown_flutter/pages/detail_page.dart';
 import 'package:rundown_flutter/pages/login_page.dart';
+import 'package:rundown_flutter/pages/search_page.dart';
 import 'package:rundown_flutter/pages/settings_page.dart';
 import 'package:rundown_flutter/bloc/rundown/rundown_state.dart';
 import 'package:rundown_flutter/utils/utils.dart';
@@ -24,6 +25,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage>{
   RundownBloc _rundownBloc;
   FocusNode _searchFocusNode;
+  TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
@@ -44,15 +46,11 @@ class _HomePageState extends State<HomePage>{
     double screenHeight = MediaQuery.of(context).size.height;
     return WillPopScope(
       onWillPop: () async{
-        
         if(_searchFocusNode.hasFocus){
-
           _searchFocusNode.unfocus();
-          print(_searchFocusNode.hasFocus);
+          _searchController.clear();
           return false;
         }
-
-
         return true;
       },
       child: Scaffold(
@@ -64,9 +62,15 @@ class _HomePageState extends State<HomePage>{
                 floating: true,
                 automaticallyImplyLeading: true,
                 title: TextField(
+                  controller: _searchController,
+                  textInputAction: TextInputAction.search,
+                  onSubmitted: (v) {
+                    if(v.isNotEmpty){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage(query: v,)));
+                    }
+                  },
                   focusNode: _searchFocusNode,
                   decoration: InputDecoration.collapsed(
-
                       hintText: "Search rundown, friends..."),
                 ),
                 trailing: GestureDetector(
@@ -124,16 +128,14 @@ class _HomePageState extends State<HomePage>{
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
+        floatingActionButton: FloatingActionButton.extended(
+          label: Text("Create"),
+          icon: Icon(Icons.add),
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(
               builder: (context) => CreateRundownPage()
               ));
           },
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
           backgroundColor: Theme.of(context).accentColor,
         ),
       ),

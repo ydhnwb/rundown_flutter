@@ -79,37 +79,41 @@ class _RundownDetailPageState extends State<RundownDetailPage> {
           return Stack(
             children: <Widget>[
               Container(
+                margin: EdgeInsets.all(16),
                 child: Form(
                   key: _formKey,
-                  child: Column(
-                    children: <Widget>[
-                      TextFormField(
-                        maxLines: 3,
-                        controller: _etTitle,
-                        decoration: InputDecoration.collapsed(
-                          hintText: "Title"
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: <Widget>[
+                        TextFormField(
+                          maxLines: 3,
+                          controller: _etTitle,
+                          decoration: InputDecoration.collapsed(
+                            hintText: "Title"
+                          ),
+                          validator: (v) {
+                            if(v.isEmpty){
+                              return "Title must not be empty";
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (v) {
-                          if(v.isEmpty){
-                            return "Title must not be empty";
-                          }
-                          return null;
-                        },
-                      ),
-                      TextFormField(
-                        maxLines: 3,
-                        controller: _etDescription,
-                        decoration: InputDecoration.collapsed(
-                          hintText: "Description"
-                        ),
-                        validator: (v) {
-                          if(v.isEmpty){
-                            return "Description must not be empty";
-                          }
-                          return null;
-                        },
-                      )
-                    ],
+                        TextFormField(
+                          maxLines: null,
+                          maxLength: null,
+                          controller: _etDescription,
+                          decoration: InputDecoration.collapsed(
+                            hintText: "Description"
+                          ),
+                          validator: (v) {
+                            if(v.isEmpty){
+                              return "Description must not be empty";
+                            }
+                            return null;
+                          },
+                        )
+                      ],
+                    ),
                   ),
                 ),
               ),

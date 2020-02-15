@@ -36,6 +36,7 @@ dependencies:
   clay_containers: ^0.2.2
   zefyr: ^0.10.0
   flutter_spinkit: ^4.1.1+1
+  chips_choice: ^1.0.0
   
 dev_dependencies:
   flutter_test:

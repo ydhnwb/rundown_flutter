@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'package:clay_containers/clay_containers.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rundown_flutter/bloc/rundown/rundown_bloc.dart';
@@ -38,9 +39,12 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => RundownDetailPage(
-            rundownId: this.widget.rundownId,
-          ))),
+          onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RundownDetailPage(
+                        rundownId: this.widget.rundownId,
+                      ))),
           backgroundColor: Theme.of(context).accentColor,
           child: Icon(Icons.add, color: Colors.white),
         ),
@@ -132,13 +136,15 @@ class _DetailPageState extends State<DetailPage> {
                                                                     child: Text(
                                                                         "CANCEL")),
                                                                 FlatButton(
-                                                                    onPressed: () {
-                                                                      Navigator.pop(context);
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
                                                                       _rundownBloc.add(FetchDeleteRundown(
-                                                                        id: state
-                                                                            .rundown
-                                                                            .id
-                                                                            .toString())); 
+                                                                          id: state
+                                                                              .rundown
+                                                                              .id
+                                                                              .toString()));
                                                                     },
                                                                     child: Text(
                                                                         "DELETE"))
@@ -158,33 +164,95 @@ class _DetailPageState extends State<DetailPage> {
                                                       color: Colors.grey[600],
                                                     ),
                                                     onPressed: () {
-                                                      print("idnyaaa "+state.rundown.id.toString());
                                                       Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                CreateRundownPage(
-                                                                    rundown: state
-                                                                        .rundown))
-                                                                        );
-                                                    }
-                                                                        ),
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  CreateRundownPage(
+                                                                      rundown: state
+                                                                          .rundown)));
+                                                    }),
                                               ),
                                             ),
-                                            Padding(
-                                              padding: EdgeInsets.all(8),
-                                              child: ClayContainer(
-                                                borderRadius: 75,
-                                                child: IconButton(
+                                            Visibility(
+                                              visible: state.rundown
+                                                      .rundownDetails.length >
+                                                  2,
+                                              child: Padding(
+                                                padding: EdgeInsets.all(8),
+                                                child: ClayContainer(
+                                                  borderRadius: 75,
+                                                  child: IconButton(
                                                     icon: Icon(
-                                                      Icons.sort,
+                                                      Icons.more_horiz,
                                                       color: Colors.grey[600],
                                                     ),
                                                     onPressed: () {
-                                                      print("reorder");
+                                                      showCupertinoModalPopup(
+                                                          context: context,
+                                                          builder: (BuildContext
+                                                                  context) =>
+                                                              CupertinoActionSheet(
+                                                                cancelButton:
+                                                                    CupertinoActionSheetAction(
+                                                                  child: Text(
+                                                                      "Cancel"),
+                                                                  onPressed: () =>
+                                                                      Navigator.pop(
+                                                                          context),
+                                                                ),
+                                                                actions: <
+                                                                    Widget>[
+                                                                  CupertinoActionSheetAction(
+                                                                    child: Text(
+                                                                        "Show QR Code"),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                  ),
+                                                                  CupertinoActionSheetAction(
+                                                                    child: Text(
+                                                                        "Send a copy"),
+                                                                    onPressed:
+                                                                        () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                    },
+                                                                  ),
+                                                                  CupertinoActionSheetAction(
+                                                                    child: Text(
+                                                                        "Reorder items"),
+                                                                    onPressed:
+                                                                        () {
+                                                                      if (state
+                                                                              .rundown
+                                                                              .rundownDetails
+                                                                              .length <
+                                                                          2) {
+                                                                        showDialog(
+                                                                            context:
+                                                                                context,
+                                                                            builder:
+                                                                                (context) {
+                                                                              return AlertDialog(
+                                                                                title: Text("Not enough items"),
+                                                                                content: Text("You need at least two items to reorder"),
+                                                                                actions: <Widget>[
+                                                                                  FlatButton(onPressed: () => Navigator.pop(context), child: Text("UNDERSTAND")),
+                                                                                ],
+                                                                              );
+                                                                            });
+                                                                      }
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              ));
                                                     },
+                                                  ),
+                                                ),
                                               ),
-                                            ),
                                             ),
                                           ],
                                         ))
@@ -197,7 +265,8 @@ class _DetailPageState extends State<DetailPage> {
                               child: state.rundown.rundownDetails.isNotEmpty
                                   ? _generateRundownDetail(
                                       state.rundown.rundownDetails)
-                                  : Text("Nothing"),
+                                  : _errorView(
+                                      "Nothing for now. Tap + to create new"),
                             )
                           ],
                         ),
@@ -242,7 +311,11 @@ class _DetailPageState extends State<DetailPage> {
   Widget _generateRundownDetail(List<RundownDetail> rundownDetails) {
     List<TimelineModel> items = List();
     for (var rd in rundownDetails) {
-      items.add(TimelineModel(RundownDetailComponent(rundownDetail: rd, rundownId: this.widget.rundownId,),
+      items.add(TimelineModel(
+          RundownDetailComponent(
+            rundownDetail: rd,
+            rundownId: this.widget.rundownId,
+          ),
           position: TimelineItemPosition.right,
           icon: Icon(Icons.info, color: Utils.textColor)));
     }
@@ -259,6 +332,29 @@ class _DetailPageState extends State<DetailPage> {
     NotusDocument notusDocument = NotusDocument.fromJson(j);
     return ZefyrView(
       document: notusDocument,
+    );
+  }
+
+  Widget _errorView(String err) {
+    return Center(
+      child: Container(
+        margin: EdgeInsets.only(top: 96),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Image.asset(Utils.doodleClumsy),
+            Container(
+              margin: EdgeInsets.only(top: 16),
+              child: FlatButton(
+                  onPressed: () {
+                    _rundownBloc.add(FetchRundown());
+                  },
+                  child: Text("Nothing for now. Tap to refresh")),
+            )
+          ],
+        ),
+      ),
     );
   }
 }

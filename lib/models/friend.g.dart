@@ -10,9 +10,7 @@ Friend _$FriendFromJson(Map<String, dynamic> json) {
   return Friend()
     ..id = json['id'] as int
     ..userId = json['user'] as int
-    ..friend = json['friend'] == null
-        ? null
-        : User.fromJson(json['friend'] as Map<String, dynamic>)
+    ..friend = json['friend'] as Map<String, dynamic>
     ..isBlocked = json['is_blocked'] as bool
     ..isAccepted = json['is_accepted'] as bool;
 }

@@ -6,13 +6,11 @@ class RestClient {
 
   static Dio instance(){
     if(_dio == null){
-      BaseOptions options = BaseOptions(
-        baseUrl: ENDPOINT,
-        connectTimeout: 3000,
-        receiveTimeout: 3000,
-        sendTimeout: 3000
-      );
-      _dio = Dio(options);
+      _dio = Dio()
+      ..options.baseUrl = ENDPOINT
+      ..options.connectTimeout = 30000
+      ..options.receiveTimeout = 30000
+      ..options.sendTimeout = 30000;
       return _dio;
     }
     return _dio;
@@ -24,4 +22,5 @@ class RestClient {
   static const FRIEND_URL = ENDPOINT+"friend/";
   static const RUNDOWN_DETAIL_URL = ENDPOINT+"rundown_detail/";
   static const RUNDOWN_URL = ENDPOINT+"rundown/";
+  static const SEARCH_URL = ENDPOINT+"search/";
 }
