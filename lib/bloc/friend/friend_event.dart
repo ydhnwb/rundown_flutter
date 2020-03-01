@@ -35,3 +35,12 @@ class Unfriend implements FriendEvent {
   @override
   List<Object> get props => [id, userTargetId];
 }
+
+class CheckFriendshipStatus implements FriendEvent {
+  final String userId;
+  CheckFriendshipStatus({@required this.userId});
+
+  @override
+  List<Object> get props => [userId];
+  
+}

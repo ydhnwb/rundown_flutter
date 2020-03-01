@@ -5,6 +5,7 @@ import 'package:rundown_flutter/bloc/friend/friend_event.dart';
 import 'package:rundown_flutter/bloc/friend/friend_state.dart';
 import 'package:rundown_flutter/models/friend.dart';
 import 'package:rundown_flutter/models/user.dart';
+import 'package:toast/toast.dart';
 
 class FriendRequestPage extends StatefulWidget {
   final User user;
@@ -17,19 +18,22 @@ class _FriendRequestPageState extends State<FriendRequestPage> {
   User _selectedUser = User();
   FriendBloc _friendBloc;
   bool _isLoading = false;
-  Friend _friend = Friend();
+  Friend _fetchedFriend;
 
   @override
   void initState() {
     super.initState();
     _selectedUser = this.widget.user;
     _friendBloc = FriendBloc();
-    _friendBloc.add(GetOneFriend(id: _selectedUser.id.toString()));
+    _friendBloc.add(CheckFriendshipStatus(userId: _selectedUser.id.toString()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Person"),
+      ),
       body: BlocConsumer(
         bloc: _friendBloc,
         builder: (context, state){
@@ -62,7 +66,10 @@ class _FriendRequestPageState extends State<FriendRequestPage> {
             _isLoading = true;
           }else if(state is FriendSingleLoadedState){
             _isLoading = false;
-            _friend = state.friend;
+            _fetchedFriend = state.friend;
+          }else if(state is FriendErrorState){
+            _isLoading = false;
+            Toast.show(state.message, context);
           }else{
             _isLoading = false;
           }
@@ -72,17 +79,15 @@ class _FriendRequestPageState extends State<FriendRequestPage> {
   }
 
   Widget createButton(){
-    if(_friend == null){
-      return FlatButton(onPressed: (){}, child: Text("Make a friend request"));
+    if(_fetchedFriend == null){
+      return Text("Add as a friend");
     }else{
-      if(!_friend.isBlocked){
-        if(_friend.isAccepted){
-          return Text("You already a friend");
-        }else{
-          return Text("Requested");
-        }
+      if(_fetchedFriend.isAccepted && !_fetchedFriend.isBlocked){
+        return Text("Already a friend");
+      }else if(!_fetchedFriend.isAccepted && !_fetchedFriend.isBlocked){
+        return Text("Requestedd");
       }else{
-        return Container();
+        return Text("Blocked");
       }
     }
   }

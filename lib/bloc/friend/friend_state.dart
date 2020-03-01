@@ -16,7 +16,9 @@ class FriendLoadingState implements FriendState {
 
 class FriendLoadedState implements FriendState {
   final List<Friend> friends;
-  FriendLoadedState({@required this.friends});
+  final List<Friend> requested;
+  final List<Friend> friendRequests;
+  FriendLoadedState({@required this.friends, @required this.requested, @required this.friendRequests});
   @override
   List<Object> get props => [friends];
 }

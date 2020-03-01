@@ -6,6 +6,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:rundown_flutter/bloc/friend/friend_bloc.dart';
+import 'package:rundown_flutter/bloc/friend/friend_event.dart';
+import 'package:rundown_flutter/bloc/friend/friend_state.dart';
 import 'package:rundown_flutter/bloc/search/search_bloc.dart';
 import 'package:rundown_flutter/bloc/search/search_event.dart';
 import 'package:rundown_flutter/bloc/search/search_state.dart';
@@ -14,6 +17,7 @@ import 'package:rundown_flutter/models/search.dart';
 import 'package:rundown_flutter/models/user.dart';
 import 'package:rundown_flutter/pages/friend_request_page.dart';
 import 'package:rundown_flutter/utils/utils.dart';
+import 'package:toast/toast.dart';
 import 'package:zefyr/zefyr.dart';
 import 'detail_page.dart';
 
@@ -32,6 +36,7 @@ class _SearchPageState extends State<SearchPage> {
   bool _isLoading = false;
   String _currentQuery;
   SearchBloc _searchBloc;
+  FriendBloc _friendBloc;
   Search _searchResult = Search()
     ..users = List<User>()
     ..rundowns = List<Rundown>();
@@ -42,6 +47,7 @@ class _SearchPageState extends State<SearchPage> {
     _currentQuery = this.widget.query;
     _searchController.text = _currentQuery;
     _searchBloc = SearchBloc();
+    _friendBloc = FriendBloc();
     _searchBloc.add(FetchSearch(query: _currentQuery));
     _searchFocusNode = FocusNode();
     _searchFocusNode.addListener(() {});
@@ -169,7 +175,19 @@ class _SearchPageState extends State<SearchPage> {
               children: List.generate(users.length, (i) {
                 return InkWell(
                   onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => FriendRequestPage(user: users[i])));
+                    // Navigator.push(context, MaterialPageRoute(builder: (context) => FriendRequestPage(user: users[i])));
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text(users[i].name),
+                          content: createButton(users[i].id.toString()),
+                          actions: <Widget>[
+                            FlatButton(onPressed: (){}, child: Text("Aowkowk"))
+                          ],
+                        );
+                      }
+                      );
                   },
                   child: Container(
                     margin: EdgeInsets.all(6),
@@ -294,5 +312,38 @@ class _SearchPageState extends State<SearchPage> {
     var j = json.decode(js);
     NotusDocument notus = NotusDocument.fromJson(j);
     return notus.toPlainText().toString();
+  }
+
+    Widget createButton(String userId){
+      _friendBloc.add(CheckFriendshipStatus(userId: userId));
+      return BlocBuilder(
+        bloc: _friendBloc,
+        builder: (context, state){
+          if(state is FriendSingleLoadedState){
+            if(state.friend == null){
+              return Text("Add as a friend");
+            }else{
+              if(state.friend.isAccepted && !state.friend.isBlocked){
+                return Text("Already a friend");
+              }else if(!state.friend.isAccepted && !state.friend.isBlocked){
+                if(state.friend.requestedBy.toString() ==userId){
+                  return Text("Requested");
+                }else{
+                  return Text("Accept invitation");
+                }
+              }else{
+                return Text("Blocked");
+              }
+            }
+          }else if(state is FriendErrorState){
+            Toast.show(state.message, context);
+            return Container();
+          }else{
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        }
+      );
   }
 }

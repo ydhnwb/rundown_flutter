@@ -7,13 +7,15 @@ class Friend {
   @JsonKey(name: "id")
   int id;
   @JsonKey(name: "user")
-  int userId;
+  Map<String, dynamic> user;
   @JsonKey(name: "friend")
   Map<String, dynamic> friend;
   @JsonKey(name: "is_blocked")
   bool isBlocked;
   @JsonKey(name: "is_accepted")
   bool isAccepted;
+  @JsonKey(name: "requested_by")
+  int requestedBy;
 
   Friend();
 
